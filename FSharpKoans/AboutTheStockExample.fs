@@ -60,6 +60,21 @@ module ``about the stock example`` =
 
     [<Koan>]
     let YouGotTheAnswerCorrect() =
-        let result =  __
+        let getDifference (low, high, day) =
+            (abs low - high, day)
         
-        AssertEquality "2012-03-13" result
+        let getHighLow (str: string) =
+            let values = str.Split([|','|])
+            let day = values.[0]
+            let high = System.Double.Parse values.[1]
+            let low = System.Double.Parse values.[4]
+            
+            (low, high, day)
+        
+        let (_, day) =
+            stockData.Tail
+            |> List.map getHighLow
+            |> List.map getDifference
+            |> List.maxBy (fun (spread, _) -> spread)
+        
+        AssertEquality "2012-03-13" day
